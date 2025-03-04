@@ -6,12 +6,18 @@ jobs:
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      # Uncomment and add this if you use a session token
+      # AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
     steps:
     - uses: actions/checkout@v3
     - uses: hashicorp/setup-terraform@v2
       with:
         terraform_version: 1.6.6
-    - run: terraform init
-    - run: terraform validate
-    - run: terraform plan
-      # Optional: Add -out=tfplan to save the plan for review
+    - name: Terraform Init
+      run: terraform init
+    - name: Terraform Validate
+      run: terraform validate
+    - name: Terraform Plan
+      run: terraform plan -out=tfplan
+    - name: Terraform Apply
+      run: terraform apply -auto-approve tfplan
